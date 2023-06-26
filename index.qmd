@@ -1,0 +1,35 @@
+---
+title: "Baby Names"
+execute:
+  echo: false
+---
+
+This is an experimental plot using data from the babynames package
+
+```{r}
+#| message: false
+library(tidyverse)
+library(babynames)
+library(ggthemes)
+```
+
+```{r}
+x <- babynames |>
+  filter(str_detect(name, "i$")) |>
+  summarise(sum_prop = sum(prop), .by = c(year, sex))
+```
+
+```{r}
+x |>
+  ggplot(aes(x = year, y = sum_prop, fill = sex)) +
+    geom_area() +
+    scale_y_continuous(labels = scales::percent_format()) +
+    labs(title = 'Percent of Babynames Ending in "i"',
+         subtitle = "Names ending in i are steadily increasing across both genders",
+         x = "Year",
+         y = NULL,
+         caption = "Data from Babynames R Package",
+         fill = "Sex") +
+    theme_clean()
+```
+
